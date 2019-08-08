@@ -1,7 +1,5 @@
 package com.example.app.ws.ui.model.request;
 
-import com.google.gson.Gson;
-
 public class UserDetailsRequestModel {
 	
 	private String firstName;
@@ -33,9 +31,5 @@ public class UserDetailsRequestModel {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	
-	@Override
-	public String toString() {
-		return new Gson().toJson(this);
-	}
+
 }
