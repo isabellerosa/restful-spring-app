@@ -33,9 +33,9 @@ import com.example.app.ws.ui.model.response.RequestOperationName;
 import com.example.app.ws.ui.model.response.RequestOperationStatus;
 import com.example.app.ws.ui.model.response.UserRest;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
-
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;;
 @RestController
-@RequestMapping("users")
+@RequestMapping("/users")
 public class UserController {
 
 	@Autowired
@@ -140,9 +140,9 @@ public class UserController {
 		
 		AddressRest returnValue = modelMapper.map(addressDto, AddressRest.class);
 		
-		Link addressLink = linkTo(UserController.class).slash(userId).slash("addresses").slash(addressId).withSelfRel();
-		Link userLink = linkTo(UserController.class).slash(userId).withRel("user");
-		Link addressesLink = linkTo(UserController.class).slash(userId).slash("addresses").withRel("addresses");
+		Link addressLink = linkTo(methodOn(UserController.class).getUserAddress(userId, addressId)).withSelfRel();
+		Link userLink = linkTo(methodOn(UserController.class).getUser(userId)).withRel("user");
+		Link addressesLink = linkTo(methodOn(UserController.class).getUserAddresses(userId)).withRel("addresses");
 
 		returnValue.add(addressLink);
 		returnValue.add(userLink);
