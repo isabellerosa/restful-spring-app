@@ -9,7 +9,8 @@ import com.example.app.ws.io.entity.AddressEntity;
 import com.example.app.ws.io.entity.UserEntity;
 
 @Repository
-public interface AddressRepository extends CrudRepository<AddressEntity, Long>{
-
+public interface AddressRepository extends CrudRepository<AddressEntity, Long> {
 	List<AddressEntity> findAllByUserDetails(UserEntity userEntity);
+	AddressEntity findByAddressId(String addressId);
+
 }

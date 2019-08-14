@@ -60,10 +60,9 @@ public class UserController {
 
 	@GetMapping(path = "/{id}", produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
 	public UserRest getUser(@PathVariable String id) {
-		UserRest returnValue = new UserRest();
 		UserDto userDto = userService.getUserByUserId(id);
 
-		BeanUtils.copyProperties(userDto, returnValue);
+		UserRest returnValue = new ModelMapper().map(userDto, UserRest.class);
 
 		return returnValue;
 	}
@@ -126,6 +125,19 @@ public class UserController {
 			returnValue = modelMapper.map(addressesDto, listType);
 		}
 
+		return returnValue;
+	}
+	
+	@GetMapping(path = "/{userId}/addresses/{addressId}", produces = { MediaType.APPLICATION_JSON_VALUE,
+			MediaType.APPLICATION_XML_VALUE })
+	public AddressRest getUserAddress(@PathVariable String userId, @PathVariable String addressId) {
+		
+		ModelMapper modelMapper = new ModelMapper();
+		
+		AddressDTO addressDto = addressService.getAddress(addressId);
+		
+		AddressRest returnValue = modelMapper.map(addressDto, AddressRest.class);
+	
 		return returnValue;
 	}
 }
