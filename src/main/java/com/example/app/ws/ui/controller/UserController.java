@@ -1,9 +1,11 @@
 package com.example.app.ws.ui.controller;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -18,9 +20,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.app.ws.exceptions.UserServiceException;
+import com.example.app.ws.service.AddressService;
 import com.example.app.ws.service.UserService;
+import com.example.app.ws.shared.dto.AddressDTO;
 import com.example.app.ws.shared.dto.UserDto;
 import com.example.app.ws.ui.model.request.UserDetailsRequestModel;
+import com.example.app.ws.ui.model.response.AddressRest;
 import com.example.app.ws.ui.model.response.ErrorMessages;
 import com.example.app.ws.ui.model.response.OperationStatusModel;
 import com.example.app.ws.ui.model.response.RequestOperationName;
@@ -34,13 +39,16 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 
+	@Autowired
+	private AddressService addressService;
+
 	@GetMapping(produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
 	public List<UserRest> getUsers(@RequestParam(value = "page", defaultValue = "1") int page,
 			@RequestParam(value = "limit", defaultValue = "25") int limit) {
 		List<UserRest> returnValue = new ArrayList<>();
-		
+
 		List<UserDto> users = userService.getUsers(page, limit);
-		
+
 		users.forEach(userDto -> {
 			UserRest userModel = new UserRest();
 			BeanUtils.copyProperties(userDto, userModel);
@@ -70,7 +78,7 @@ public class UserController {
 
 		ModelMapper modelMapper = new ModelMapper();
 		UserDto userDto = modelMapper.map(userDetails, UserDto.class);
-		
+
 		UserDto createdUser = userService.createUser(userDto);
 		returnValue = modelMapper.map(createdUser, UserRest.class);
 
@@ -100,6 +108,23 @@ public class UserController {
 
 		userService.deleteUser(id);
 		returnValue.setOperationResult(RequestOperationStatus.SUCCESS.name());
+
+		return returnValue;
+	}
+
+	@GetMapping(path = "/{id}/addresses", produces = { MediaType.APPLICATION_JSON_VALUE,
+			MediaType.APPLICATION_XML_VALUE })
+	public List<AddressRest> getUserAddresses(@PathVariable String id) {
+		List<AddressRest> returnValue = new ArrayList<>();
+
+		List<AddressDTO> addressesDto = addressService.getAddresses(id);
+
+		if (addressesDto != null && !addressesDto.isEmpty()) {
+			ModelMapper modelMapper = new ModelMapper();
+			Type listType = new TypeToken<List<AddressRest>>() {
+			}.getType();
+			returnValue = modelMapper.map(addressesDto, listType);
+		}
 
 		return returnValue;
 	}
