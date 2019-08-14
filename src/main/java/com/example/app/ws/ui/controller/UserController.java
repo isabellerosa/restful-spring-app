@@ -8,6 +8,7 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.Link;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,6 +32,7 @@ import com.example.app.ws.ui.model.response.OperationStatusModel;
 import com.example.app.ws.ui.model.response.RequestOperationName;
 import com.example.app.ws.ui.model.response.RequestOperationStatus;
 import com.example.app.ws.ui.model.response.UserRest;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 
 @RestController
 @RequestMapping("users")
@@ -137,6 +139,14 @@ public class UserController {
 		AddressDTO addressDto = addressService.getAddress(addressId);
 		
 		AddressRest returnValue = modelMapper.map(addressDto, AddressRest.class);
+		
+		Link addressLink = linkTo(UserController.class).slash(userId).slash("addresses").slash(addressId).withSelfRel();
+		Link userLink = linkTo(UserController.class).slash(userId).withRel("user");
+		Link addressesLink = linkTo(UserController.class).slash(userId).slash("addresses").withRel("addresses");
+
+		returnValue.add(addressLink);
+		returnValue.add(userLink);
+		returnValue.add(addressesLink);
 	
 		return returnValue;
 	}
