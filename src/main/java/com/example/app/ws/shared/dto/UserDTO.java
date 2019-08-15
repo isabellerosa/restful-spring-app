@@ -3,7 +3,7 @@ package com.example.app.ws.shared.dto;
 import java.io.Serializable;
 import java.util.List;
 
-public class UserDto implements Serializable {
+public class UserDTO implements Serializable {
 
 	private static final long serialVersionUID = 1980161031456142627L;
 	private long id;

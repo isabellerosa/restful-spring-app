@@ -8,7 +8,7 @@ public class AddressDTO {
 	private String streetName;
 	private String postalCode;
 	private String type;
-	private UserDto userDetails;
+	private UserDTO userDetails;
 
 	public long getId() {
 		return id;
@@ -66,11 +66,11 @@ public class AddressDTO {
 		this.type = type;
 	}
 
-	public UserDto getUserDetails() {
+	public UserDTO getUserDetails() {
 		return userDetails;
 	}
 
-	public void setUserDetails(UserDto userDetails) {
+	public void setUserDetails(UserDTO userDetails) {
 		this.userDetails = userDetails;
 	}
 
